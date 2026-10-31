@@ -1,6 +1,6 @@
 from base import RGBDSensor
 from control import Manipulator
-
+import math
 from ultralytics import YOLO
 import open3d as o3d
 import numpy as np
@@ -10,7 +10,7 @@ import time
 
 class ObjectDetector:
     def __init__(self,):
-        self.detector = YOLO("./weights/best.pt")
+        self.detector = YOLO("./src/weights/best.pt")
 
     def detect_objects(self, rgbImage):
         '''
@@ -35,21 +35,33 @@ class Perception:
         '''
         returns list of 7D joint poses to explore the scene
         '''
-
+        p = self.manipulator.pybullet_client
+        panda_id = self.manipulator.pandaId
+        ee_index = self.manipulator.PANDA_END_EFFECTOR_INDEX
+        current_pos = p.getLinkState(panda_id, 11)[4]
         poses = []
-        for yaw in range(0, 181,5):
-            for pitch in range(0,181,5):
-                current_pos = self.manipulator.p.getLinkState(self.manipulator.panda_id, 11)[4]
-                target_orn = [0, pitch*(3.14/180), yaw*(3.14/180)]
-                full_ik_solution = self.manipulator.p.calculateInverseKinematics(
-                                        bodyUniqueId=self.manipulator.panda_id,
-                                        endEffectorLinkIndex=11,
-                                        targetPosition=pos,
-                                        targetOrientation=target_orn,
-                                        maxNumIterations=200,
-                                        residualThreshold=1e-5
-                         )
-                poses.append(full_ik_solution[:7])
+        roll = math.pi 
+
+        for yaw in range(0, 181, 5):
+            for pitch in range(0, 181, 5):
+                
+                pitch_rad = math.radians(pitch)
+                yaw_rad = math.radians(yaw)
+                target_orn = p.getQuaternionFromEuler([roll, pitch_rad, yaw_rad])
+
+                
+                full_ik_solution = p.calculateInverseKinematics(
+                    bodyUniqueId=panda_id,
+                    endEffectorLinkIndex=ee_index,
+                    targetPosition=current_pos,
+                    targetOrientation=target_orn,
+                    maxNumIterations=200,
+                    residualThreshold=1e-5
+                )
+
+                
+                poses.append(list(full_ik_solution[:7]))
+
         return poses
 
 

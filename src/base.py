@@ -158,16 +158,16 @@ class Environment:
         
         #Adding plate and objects. The number of objects and thier position as well as the plate position will change in the assignment evaluation.
         # You can change the init_state.json to test your code with different object positions and number of objects. But make sure to reset it to the original state before submission.
-        p.loadURDF('./assets/Collection/small_shelf.urdf', init_state["shelf_position"], globalScaling=.6)
+        p.loadURDF('./src/assets/Collection/small_shelf.urdf', init_state["shelf_position"], globalScaling=.6)
         plate_position = np.array(init_state['shelf_position']) + np.array([0,0,0.26])
-        p.loadURDF('./assets/Collection/plate.urdf', plate_position.tolist(), globalScaling=.1)
+        p.loadURDF('./src/assets/Collection/plate.urdf', plate_position.tolist(), globalScaling=.1)
         
         
         for (object_name, position) in init_state["objects"].items():
             if object_name == 'wood_block':
-                p.loadURDF("./assets/Collection/wood_block.urdf", position, globalScaling=.4)
+                p.loadURDF("./src/assets/Collection/wood_block.urdf", position, globalScaling=.4)
             else:
-                 p.loadURDF(f"./assets/Collection/{object_name}.urdf", position, globalScaling=.1)
+                 p.loadURDF(f"./src/assets/Collection/{object_name}.urdf", position, globalScaling=.1)
 
         self.bullet_client = p
         self.pandaId = pandaId

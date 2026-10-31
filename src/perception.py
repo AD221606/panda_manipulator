@@ -9,7 +9,7 @@ import cv2
 
 class ObjectDetector:
     def __init__(self,):
-        self.detector = YOLO("./weights/best.pt")
+        self.detector = YOLO("./src/weights/best.pt")
 
     def detect_objects(self, rgbImage):
         '''

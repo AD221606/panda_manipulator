@@ -23,7 +23,7 @@ if __name__=="__main__":
 
     ## 1.1 Propose exploration poses using heuristics and/or current observation
     exploration_poses = perceptor.generate_exploration_poses()
-
+    print(exploration_poses)
     ## 1.2 Explore the scene with proposed exploration and collect spatial information
     pcds = perceptor.exlpore_scene(exploration_poses)
 

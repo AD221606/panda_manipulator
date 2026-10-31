@@ -11,7 +11,7 @@ import json
 
 if __name__=="__main__":
     ## 0. Initialize the environment with the initial state provided in init_state.json. You can test your code on various initial states by changing the json file.
-    with open('./init_state.json', 'r') as f:
+    with open('./src/init_state.json', 'r') as f:
         init_state = json.load(f)
 
     env = Environment(p, init_state)

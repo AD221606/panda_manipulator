@@ -30,11 +30,27 @@ class Perception:
         self.manipulator = manipulator
         self.depth_processor = DepthProcessor()
 
-    def generate_exploration_poses(self,):
+    def generate_exploration_poses(self):
         '''
         returns list of 7D joint poses to explore the scene
         '''
-        # TODO
+
+        poses = []
+        for yaw in range(0, 181,5):
+            for pitch in range(0,181,5):
+                current_pos = self.manipulator.p.getLinkState(self.manipulator.panda_id, 11)[4]
+                target_orn = [0, pitch*(3.14/180), yaw*(3.14/180)]
+                full_ik_solution = self.manipulator.p.calculateInverseKinematics(
+                                        bodyUniqueId=self.manipulator.panda_id,
+                                        endEffectorLinkIndex=11,
+                                        targetPosition=pos,
+                                        targetOrientation=target_orn,
+                                        maxNumIterations=200,
+                                        residualThreshold=1e-5
+                         )
+                poses.append(full_ik_solution[:7])
+        return poses
+
 
     def identify_objects(self, pointcloud_clusters):
         '''

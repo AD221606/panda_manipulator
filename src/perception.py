@@ -5,6 +5,7 @@ from ultralytics import YOLO
 import open3d as o3d
 import numpy as np
 import cv2
+import time
 
 
 class ObjectDetector:
@@ -90,7 +91,15 @@ class Perception:
         returns
             pointclouds : list of collected pointclouds from the exploration
         '''
-        # TODO
+        collected_pointclouds = []
+        for p in exlporation_poses:
+            pose = pybullet.calculateInverseKinematics(p)
+            command = self.move_to_cartesian_pose(pose)
+            # time.sleep(0.5) #this is for safety if the current one gives noisy point clouds
+            pointcloud = self.get_camera_pointcloud()
+            collected_pointclouds.append(pointcloud)
+
+        return collected_pointclouds
 
 
 class DepthProcessor:
